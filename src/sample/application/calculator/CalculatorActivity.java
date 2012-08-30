@@ -81,7 +81,7 @@ public class CalculatorActivity extends Activity {
     	
     	((TextView)findViewById(R.id.displayPanel)).setText(fText);
     }
-    
+    /*
     public void fuctionKeyOnClick(View v){
     	switch(v.getId()){
     	case R.id.keypadAC:
@@ -103,7 +103,7 @@ public class CalculatorActivity extends Activity {
     	}
     	showNumber(this.strTemp);
     }
-    
+    */
     public void operatorKeyOnClick(View v){
     	if(this.operator != 0){
     		if(this.strTemp.length()>0){
@@ -174,7 +174,7 @@ public class CalculatorActivity extends Activity {
     		if(!bd2.equals(BigDecimal.ZERO)){
     			result = bd1.divide(bd2, 12, 3);
     		}else{
-    			Toast toast = Toast.makeText(this, R.string.toast, 10000);
+    			Toast toast = Toast.makeText(this, R.string.toast_div_by_zero, 10000);
     			toast.show();
     		}
     		break;
