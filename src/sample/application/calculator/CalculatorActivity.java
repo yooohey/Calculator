@@ -1,5 +1,6 @@
 package sample.application.calculator;
 
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 import android.os.Bundle;
@@ -11,13 +12,14 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class CalculatorActivity extends Activity {
 	//public String buffer = null;
 	//public String operator = null;
 	public String strTemp = null;
 	public String  strResult = "0";
-	int operator = 0;
+	Integer operator = 0;
 	
 	
     @Override
@@ -99,28 +101,28 @@ public class CalculatorActivity extends Activity {
     		cm.setText(((TextView)findViewById(R.id.displayPanel)).getText());
     		return;
     	}
-    	showNumber(strTemp);
+    	showNumber(this.strTemp);
     }
     
     public void operatorKeyOnClick(View v){
-    	if(operator != 0){
-    		if(strTemp.length()>0){
-    			strResult = doCalc();
-    			showNumber(strResult);
+    	if(this.operator != 0){
+    		if(this.strTemp.length()>0){
+    			this.strResult = this.doCalc();
+    			this.showNumber(this.strResult);
     		}
     	}
     	else{
-    		if(strTemp.length() > 0){
-    			strResult = strTemp;
+    		if(this.strTemp.length() > 0){
+    			this.strResult = this.strTemp;
     		}
     	}
-    	strTemp = "";
+    	this.strTemp = "";
     	
     	if(v.getId() == R.id.keypadEq){
-    		operator = 0;
+    		this.operator = 0;
     	}
     	else{
-    		operator = v.getId();
+    		this.operator = v.getId();
     	}
     	
     	/*
@@ -153,7 +155,35 @@ public class CalculatorActivity extends Activity {
     	*/
     }
     
-    public void doCalc(){
+    private String doCalc(){
+    	BigDecimal bd1 = new BigDecimal(strResult);
+    	BigDecimal bd2 = new BigDecimal(strTemp);
+    	BigDecimal result = BigDecimal.ZERO;
+    	
+    	switch(operator){
+    	case R.id.keypadAdd:
+    		result = bd1.add(bd2);
+    		break;
+    	case R.id.keypadSub:
+    		result = bd1.subtract(bd2);
+    		break;
+    	case R.id.keypadMulti:
+    		result = bd1.multiply(bd2);
+    		break;
+    	case R.id.keypadDiv:
+    		if(!bd2.equals(BigDecimal.ZERO)){
+    			result = bd1.divide(bd2, 12, 3);
+    		}else{
+    			Toast toast = Toast.makeText(this, R.string.toast, 10000);
+    			toast.show();
+    		}
+    		break;
+    	}
+    	if(result.toString().indexOf(".") >= 0){
+    		return result.toString().replaceAll("¥¥.0 + $|0+$", "");
+    	}else{
+    		return result.toString();
+    	}
     	/*
     	int box = 0;
     	TextView tv=(TextView) this.findViewById(R.id.displayPanel);
