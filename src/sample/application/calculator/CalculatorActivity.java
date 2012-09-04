@@ -4,10 +4,8 @@ import java.math.BigDecimal;
 import java.text.DecimalFormat;
 
 import android.os.Bundle;
-import android.renderscript.Sampler.Value;
 import android.app.Activity;
-import android.content.ClipboardManager;
-import android.util.Log;
+import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -15,17 +13,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 public class CalculatorActivity extends Activity {
-	//public String buffer = null;
-	//public String operator = null;
-	public String strTemp = null;
-	public String  strResult = "0";
-	Integer operator = 0;
-	
-	
+
+	public String strTemp = "";
+	public String strResult = "0";
+	public Integer operator = 0;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calculator);
+        readPreferences();
     }
 
     @Override
@@ -34,7 +31,10 @@ public class CalculatorActivity extends Activity {
         return true;
     }
     
+    
+    
     public void numKeyOnClick(View v){
+   
     	String strInKey = (String) ((Button)v).getText();
     	
     	if(strInKey.equals(".")){
@@ -48,39 +48,34 @@ public class CalculatorActivity extends Activity {
     	}else{
     		this.strTemp = this.strTemp + strInKey;
     	}
-    	//TODO インスタン変数渡しちゃってる
+    	
     	this.showNumber(this.strTemp);
-    	/*
-    	Button button = (Button) v;
-    	TextView tv=(TextView) this.findViewById(R.id.displayPanel);
-    	if(tv.getText().toString().equals("0")){
-    		tv.setText("");
-    	}
-    	tv.setText(tv.getText().toString()+button.getText().toString());
-    	*/
     }
     
     private void showNumber(String strNum){
-    	DecimalFormat form = new DecimalFormat("#, ##0");
+  
+    	DecimalFormat form = new DecimalFormat("#,##0");
     	String strDecimal = "";
     	String strInt = "";
     	String fText = "";
     	
     	if(strNum.length() > 0){
-    		int decimalPoint = strNum.indexOf(".");
+    		int decimalPoint = strNum.indexOf(".");				
     		if(decimalPoint > -1){
     			strDecimal = strNum.substring(decimalPoint);
     			strInt = strNum.substring(0,decimalPoint);
     		}else{
     			strInt = strNum;
     		}
-    		fText = form.format(Double.parseDouble(strInt))+strDecimal;
+    		
+    		fText = form.format(Double.parseDouble(strInt)) + strDecimal;
     	}else{
     		fText = "0";
     	}
     	
-    	((TextView)findViewById(R.id.displayPanel)).setText(fText);
+    	((TextView)this.findViewById(R.id.displayPanel)).setText(fText);
     }
+    
     /*
     public void fuctionKeyOnClick(View v){
     	switch(v.getId()){
@@ -104,55 +99,28 @@ public class CalculatorActivity extends Activity {
     	showNumber(this.strTemp);
     }
     */
+   
+    
     public void operatorKeyOnClick(View v){
+     
     	if(this.operator != 0){
-    		if(this.strTemp.length()>0){
-    			this.strResult = this.doCalc();
+    		if(this.strTemp.length() > 0){
+    			this.strResult = doCalc();
     			this.showNumber(this.strResult);
     		}
-    	}
-    	else{
+    	}else{
     		if(this.strTemp.length() > 0){
     			this.strResult = this.strTemp;
     		}
     	}
-    	this.strTemp = "";
+    	
+    	this.strTemp="";
     	
     	if(v.getId() == R.id.keypadEq){
     		this.operator = 0;
-    	}
-    	else{
+    	}else{
     		this.operator = v.getId();
     	}
-    	
-    	/*
-    	Button button = (Button) v;
-    	//Log.d("button=",String.valueOf(button.getId()));
-    	TextView tv=(TextView) this.findViewById(R.id.displayPanel);
-    	
-    	if(button.getText().toString().equals("=")){
-    		tv.setText(Integer.toString(doCalc(buffer,operator)));
-    	}
-    	else{
-    		this.buffer = tv.getText().toString(); //ディスプレイの値を保存
-	    	if(button.getText().toString().equals("+")){
-	    		this.operator = "+";
-	    		tv.setText("0");
-	    	}
-	    	else if(button.getText().toString().equals("-")){
-	    		this.operator = "-";
-	    		tv.setText("0");
-	    	}
-	    	else if(button.getText().toString().equals("*")){
-	    		this.operator = "*";
-	    		tv.setText("0");
-	    	}
-	    	else if(button.getText().toString().equals("/")){
-	    		this.operator = "/";
-	    		tv.setText("0");
-	    	}
-    	}
-    	*/
     }
     
     private String doCalc(){
@@ -172,36 +140,42 @@ public class CalculatorActivity extends Activity {
     		break;
     	case R.id.keypadDiv:
     		if(!bd2.equals(BigDecimal.ZERO)){
-    			result = bd1.divide(bd2, 12, 3);
+    			result = bd1.divide(bd2,12,3);
     		}else{
-    			Toast toast = Toast.makeText(this, R.string.toast_div_by_zero, 10000);
+    			Toast toast = Toast.makeText(this, R.string.toast_div_by_zero, 1000);
     			toast.show();
     		}
     		break;
     	}
+    	
     	if(result.toString().indexOf(".") >= 0){
-    		return result.toString().replaceAll("¥¥.0 + $|0+$", "");
+    		return result.toString().replaceAll("¥¥.0+$|0+$", "");
     	}else{
     		return result.toString();
     	}
-    	/*
-    	int box = 0;
-    	TextView tv=(TextView) this.findViewById(R.id.displayPanel);
-    	
-    	if(operator.equals("+")){
-			box = Integer.valueOf(buffer) + Integer.valueOf(tv.getText().toString());
-		}
-		else if(operator.equals("-")){
-			box = Integer.valueOf(buffer) - Integer.valueOf(tv.getText().toString());
-		}
-		else if(operator.equals("*")){
-			box = Integer.valueOf(buffer) * Integer.valueOf(tv.getText().toString());
-		}
-		else if(operator.equals("/")){
-			box = Integer.valueOf(buffer) / Integer.valueOf(tv.getText().toString());
-		}
-    	return box;
-    	*/
+    }
+    
+    void writePreferences(){
+    	SharedPreferences prefs = getSharedPreferences("CalcPrefs", MODE_PRIVATE);
+    	SharedPreferences.Editor editor = prefs.edit();
+    	editor.putString("strTemp",  strTemp);
+    	editor.putString("strResult", strResult);
+    	editor.putInt("opetator", operator);
+    	editor.putString("strDisplay", ((TextView)findViewById(R.id.displayPanel)).getText().toString());
+    	editor.commit();
+    }
+    
+    void readPreferences(){
+    	SharedPreferences prefs = getSharedPreferences("CalcPrefs", MODE_PRIVATE);
+    	strTemp = prefs.getString("strTemp", "");
+    	strResult = prefs.getString("strResult", "0");
+    	operator = prefs.getInt("operator", 0);
+    	((TextView)findViewById(R.id.displayPanel)).setText(prefs.getString("strDisplay", "0"));
+    }
+
+	@Override
+	protected void onStop() {
+		writePreferences();
+		super.onStop();
 	}
 }
-
