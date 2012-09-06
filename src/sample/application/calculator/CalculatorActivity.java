@@ -1,10 +1,12 @@
 package sample.application.calculator;
 
 import java.math.BigDecimal;
+
 import java.text.DecimalFormat;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.text.ClipboardManager;
 import android.content.SharedPreferences;
 import android.view.Menu;
 import android.view.View;
@@ -76,7 +78,6 @@ public class CalculatorActivity extends Activity {
     	((TextView)this.findViewById(R.id.displayPanel)).setText(fText);
     }
     
-    /*
     public void fuctionKeyOnClick(View v){
     	switch(v.getId()){
     	case R.id.keypadAC:
@@ -98,7 +99,6 @@ public class CalculatorActivity extends Activity {
     	}
     	showNumber(this.strTemp);
     }
-    */
    
     
     public void operatorKeyOnClick(View v){

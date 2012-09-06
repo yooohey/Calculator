@@ -30,7 +30,7 @@
             
         		<Button
 		            android:id="@+id/keypadCopy"
-		            
+		            android:onClick="fuctionKeyOnClick"
 		            android:text="Copy" 
 		            android:padding="0dp"
 		            android:textSize="24sp"
@@ -39,6 +39,7 @@
         		
         		<Button
 		            android:id="@+id/keypadC"
+		            android:onClick="fuctionKeyOnClick"
 		            android:text="C" 
 		            android:padding="0dp"
 		            android:textSize="24sp"
@@ -47,6 +48,7 @@
         		
         		<Button
 		            android:id="@+id/keypadAC"
+		            android:onClick="fuctionKeyOnClick"
 		            android:text="AC" 
 		            android:padding="0dp"
 		            android:textSize="24sp"
@@ -54,6 +56,7 @@
 		            android:layout_width="80dp" />
         		<Button
 		            android:id="@+id/keypadBS"
+		            android:onClick="fuctionKeyOnClick"
 		            android:text="BS" 
 		            android:padding="0dp"
 		            android:textSize="24sp"
